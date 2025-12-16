@@ -117,6 +117,23 @@ public class ReviewServiceTest {
     }
 
     @Test
+    void createReview() {
+        // given
+        Pos pos = TestFixtures.getPosFixtures().getFirst();
+        assertNotNull(pos.getId());
+        Review review = TestFixtures.getReviewFixtures().getFirst();
+        assertNotNull(review.pos().getId());
+        when(posDataService.getById(review.pos().id())).thenReturn(pos);
+        when(reviewDataService.upsert(review)).thenReturn(review);
+
+        // when
+        Review r = reviewService.upsert(review);
+
+        // then
+        assertThat(r.id() == review.id());
+    }
+
+    @Test
     void createReviewPosDoesNotExistException() {
         // given
         Review review = TestFixtures.getReviewFixtures().getFirst();
